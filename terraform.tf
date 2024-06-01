@@ -4,7 +4,7 @@ terraform {
 
     workspaces {
       project = "gh-v6"
-      name = "main"
+      name = "gh-v6com"
     }
   }
 
