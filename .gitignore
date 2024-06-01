@@ -1,0 +1,6 @@
+# Direnv
+/.direnv
+
+# Terraform
+.terraform
+.terraform.*

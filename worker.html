@@ -1,0 +1,158 @@
+<link href="https://cdn.jsdelivr.net/npm/@primer/css@21.0.9/dist/primer.min.css" rel="stylesheet">
+<div class="container-xl px-3 px-md-4 px-lg-5 mt-4">
+<article class="markdown-body f2-mktg">
+
+<h1>GitHub downloads, with IPv6</h1>
+
+<form id="form">
+  <p>Paste your GitHub <b>download</b> URL and get an IPv6-enabled URL in return:</p>
+
+  <label htmlFor="input_url">GitHub URL:</label>
+  <input type="url" id="input_url" className="form-control" placeholder="paste
+  your URLs here"/>
+  <br>
+  <label htmlFor="output_url">gh-v6 URL:</label>
+  <input read-only id="output_url" className="form-control"
+  placeholder="https://gh-v6.com/..." />
+  <br>
+
+  <button disabled type="submit" className="btn" id="go">Navigate</button>
+</form>
+<script>
+form = document.getElementById("form");
+input_url = document.getElementById("input_url");
+output_url = document.getElementById("output_url");
+go = document.getElementById("go");
+input_url.onchange = function() {
+  var url = new URL(input_url.value);
+  if (url.host == "github.com") {
+    url.host = "gh-v6.com";
+    output_url.value = url.toString();
+    go.disabled = false;
+  } else if (url.host == "raw.githubusercontent.com") {
+    output_url.value = url.toString();
+    go.disabled = false;
+  } else {
+    output_url.value = "unsupported URL";
+    go.disabled = true;
+  }
+}
+form.onsubmit = function() {
+  if (!go.disabled) {
+    console.log("navigating to", output_url.value);
+    window.location = output_url.value;
+  } else {
+    console.log("no valid value to navigate to");
+  }
+  return false
+};
+</script>
+
+<h2>Dear Microsoft</h2>
+
+<cite>
+Dear Microsoft, World IPv6 Launch was on 6 June 2012. Is it possible to add
+IPv6 support to Github soon? :)
+</cite>
+
+<p>There is a small, but growing fraction of the Internet that only has no or
+  bad IPv4 support.</p>
+
+<p>Mostly, hosting providers are starting to charge extra for IPv4 addresses. See:
+</p>
+
+<ul>
+  <li><a
+      href="https://aws.amazon.com/blogs/aws/new-aws-public-ipv4-address-charge-public-ip-insights/">AWS
+      starts charging for IPv4</a></li>
+  <li><a href="https://docs.hetzner.com/general/others/ipv4-pricing/">Hetzner
+      starts charging for IPv4</a></li>
+</ul>
+
+<p>It would be nice if GitHub.com could start supporting IPv6.</p>
+
+<h2>The workaround</h2>
+
+<p>
+  This website provides a small IPv6-enabled proxy to GitHub. But only on
+  download URLs. The goal is not to clone the website, just allow us to
+  bootstrap new servers based on GitHub release assets.</p>
+
+<p>For those URLs, replace <pre>github.com</pre> with <pre>gh-v6.com</pre> and
+  it should work out of the box. Eg:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Before</th>
+      <th>After</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Repo archive</td>
+      <td>https://github.com/NixOS/nixpkgs/archive/refs/heads/master.zip</td>
+      <td>https://gh-v6.com/NixOS/nixpkgs/archive/refs/heads/master.zip</td>
+    </tr>
+    <tr>
+      <td>Release assets</td>
+      <td>https://github.com/nix-community/nixos-images/releases/download/nixos-unstable/nixos-kexec-installer-noninteractive-aarch64-linux.tar.gz</td>
+      <td>https://gh-v6.com/nix-community/nixos-images/releases/download/nixos-unstable/nixos-kexec-installer-noninteractive-aarch64-linux.tar.gz</td>
+    </tr>
+    <tr>
+      <td>Repo content</td>
+      <td>https://raw.githubusercontent.com/NixOS/nix/master/README.md</td>
+      <td>Already supports IPv6! Thanks @puckipedia for noticing.</td>
+    </tr>
+    <tr>
+      <td>GitHub Pages</td>
+      <td>*.github.io</td>
+      <td>
+        <a href="https://github.blog/changelog/2021-09-30-enabling-ipv6-support-for-github-pages/">Already supports IPv6!</a>
+        Thanks @mynacol@ipv6.social for the notice.
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>Known limitations</h2>
+
+<ul>
+  <li>It's not possible to browse GitHub. Mostly because it would cost too much
+    to handle all of those requests.</li>
+  <li>Everything is still super fresh.</li>
+</ul>
+
+<h1>Other workarounds</h1>
+
+<ul>
+  <li>
+    For git clones, check out: <a href="https://danwin1210.de/github-ipv6-proxy.php?lang=en">danwin1210.de/github-ipv6-proxy.php?lang=en</a>
+  </li>
+</ul>
+
+<h1>About us</h1>
+
+<p>We are a small consulting agency that loves open-source, Nix, deploying
+  servers and interesting software challenges.</p>
+
+<p>This little hackday project was created to make our and other people's lives
+  easier. And maybe push Microsoft in the right direction?</p>
+
+<p>
+  If you like the spirit, check us out:
+  <a href="http://numtide.com">
+    <img alt="Numtide" width=300 src=https://codahosted.io/docs/6FCIMTRM0p/blobs/bl-sgSunaXYWX/077f3f9d7d76d6a228a937afa0658292584dedb5b852a8ca370b6c61dabb7872b7f617e603f1793928dc5410c74b3e77af21a89e435fa71a681a868d21fd1f599dd10a647dd855e14043979f1df7956f67c3260c0442e24b34662307204b83ea34de929d>
+  </a>.
+</p>
+
+<h1>Legal</h1>
+
+<p>Hello Microsoft, how are you? I hope you see that we are trying to be
+  helpful.</p>
+
+<p>If you want to contact us, send your <strike>cease and desist</strike> love letters to
+  hello@numtide.com.</p>
+
+<p>Best, Jonas</p>

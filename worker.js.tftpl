@@ -1,0 +1,55 @@
+const indexPage = `
+${worker_index_html}
+`;
+
+const notSupportedPage = `
+${worker_not_supported_html}
+`
+
+// Eg: https://github.com/direnv/direnv/archive/refs/heads/master.zip
+const reArchive = new RegExp("^/[^/]+/[^/]+/archive/refs/.*");
+// Eg: https://github.com/direnv/direnv/releases/download/v2.32.3/direnv.darwin-amd64
+const reAssets = new RegExp("^/[^/]+/[^/]+/releases/download/.*");
+
+function htmlResponse(html, status) {
+  let headers = new Headers();
+  headers.set('Content-Type', 'text/html; charset=utf-8');
+  return new Response(html, {
+    status: status,
+    headers: headers,
+  });
+}
+
+export default {
+  async fetch(request) {
+    const url = new URL(request.url)
+
+    // Custom home page to explain the project
+    if (url.pathname == "/") {
+      return htmlResponse(indexPage, 200);
+    }
+
+    // Switch based on the domain
+    switch(url.host) {
+    case "gh-v6.com":
+    case "www.gh-v6.com":
+      url.host = "github.com";
+      if (!url.pathname.match(reArchive) && !url.pathname.match(reAssets)) {
+        return htmlResponse(notSupportedPage, 404);
+      }
+      break;
+    case "raw.gh-v6.com":
+      url.host = "raw.githubusercontent.com";
+      break;
+    default:
+      throw "unknown domain: " + url.host;
+    }
+
+    const resp = await fetch(url, {
+      // Force Cloudflare to cache everything
+      cf: { cacheEverything: true }
+    });
+
+    return resp;
+  }
+}
